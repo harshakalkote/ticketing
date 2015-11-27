@@ -1,0 +1,126 @@
+<% status_str = ""
+     if @ticket.status == 1
+       status_str = "NEW"
+     elsif @ticket.status == 2
+       status_str = "OPEN"
+     elsif @ticket.status == 3
+       status_str = "CLOSED"
+     end
+%>
+
+<div class="text-center">
+<h1> Ticket: <%= @ticket.title %></h1>
+</div>
+<br/>
+
+<table class="table table-hover">
+  <tbody>
+
+    <tr>
+      <th scope="row" class="col-md-3 text-left"> Customer Name: </th>
+      <td class="col-md-8 text-left"> <%= @ticket.customer_name %> </td>
+    </tr>
+
+    <tr>
+      <th scope="row" class="col-md-3 text-left"> Customer Email: </th>
+      <td class="col-md-8 text-left"> <%= @ticket.customer_email %> </td>
+    </tr>
+
+    <tr>
+      <th scope="row" class="col-md-3 text-left"> Created by: </th>
+      <td class="col-md-8 text-left"> <%= @ticket.created_by %> </td>
+    </tr>
+
+    <tr>
+      <th scope="row" class="col-md-3 text-left"> Assigned To: </th>
+      <td class="col-md-8 text-left"> <%= @ticket.assigned_to %> </td>
+    </tr>
+
+    <tr>
+      <th scope="row" class="col-md-3 text-left"> Issue Details: </th>
+      <td class="col-md-8 text-left"> <%= @ticket.issue %> </td>
+    </tr>
+
+    <tr>
+      <th scope="row" class="col-md-3 text-left"> Area: </th>
+      <td class="col-md-8 text-left"> <%= @ticket.area %> </td>
+    </tr>
+
+    <tr>
+      <th scope="row" class="col-md-3 text-left"> Status: </th>
+      <td class="col-md-8 text-left"> <%= status_str %> </td>
+    </tr>
+
+  </tbody>
+</table>
+
+<% if @ticket.status != 3 %>
+<%= form_for @ticket, html: {class: "form-horizontal"} do |f| %>
+  <% if @ticket.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@ticket.errors.count, "error") %> prohibited this ticket from being saved:</h2>
+
+      <ul>
+      <% @ticket.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="form-group">
+
+    <%= f.label :assigned_to, "Change Assignee:", class:"control-label col-md-3 assign-to-label" %>
+    <div class="col-md-6 input-lg">
+    <%= f.text_field :assigned_to, class:"form-control", value: @ticket.assigned_to %>
+    </div>
+
+  <div class="actions btn-default btn-lg">
+    <%= f.submit "Assign" %>
+  </div>
+  </div>
+<% end %>
+
+<div class="text-center">
+<%= link_to 'Close Ticket', close_ticket_path(@ticket), class: "btn btn-default" %>
+</div>
+<% end %>
+
+<h3>Comments</h3>
+<% if @ticket.comments.length > 0 %>
+  <% @ticket.comments.each do |comment| %>
+    <p>
+      <b>Author:</b>
+      <%= comment.created_by %>
+    </p>
+
+    <p>
+      <b>Comment:</b>
+      <%= comment.description %>
+    </p>
+  <% end %>
+<% else %>
+  <h4>No comments have been added to this ticket yet.</h4>
+<% end %>
+
+<% if @ticket.status != 3 %>
+<h2>Add a comment:</h2>
+<%= form_for([@ticket, @ticket.comments.build]) do |f| %>
+  <div class="field">
+    <div class="input description-input-box">
+      <%= f.text_area :description %>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+<% end %>
+
+
+<div class="text-center">
+<% if @ticket.status != 3 %>
+<%= link_to 'Edit', edit_ticket_path(@ticket) %> |
+<% end %>
+<%= link_to 'Back', tickets_path %>
+</div>
