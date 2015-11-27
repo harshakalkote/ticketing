@@ -6,7 +6,7 @@
   <thead>
     <tr>
       <th> Area Name </th>
-      <th colspan="2"></th>
+      <th colspan="1"></th>
     </tr>
   </thead>
 
@@ -14,8 +14,7 @@
     <% @areas.each do |area| %>
       <tr>
         <td><%= area.area_name %></td>
-        <td><%= link_to 'Edit', edit_area_path(area), class:'btn btn-default btn-xs' %></td>
-        <td><%= link_to 'Destroy', area, method: :delete, data: { confirm: 'Are you sure?' }, class:'btn btn-default btn-xs' %></td>
+        <td><%= link_to 'Delete', area, method: :delete, data: { confirm: 'Are you sure?' }, class:'btn btn-default btn-xs' %></td>
       </tr>
     <% end %>
   </tbody>
